@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: MCP 数学工具 API
+  description: 一个支持 LaTeX 格式数学表达式计算的 HTTP API 服务
+  version: 1.0.0
+  contact:
+    name: MCP Math Tool
+    url: https://github.com/yourusername/mcp-math-tool
+
+servers:
+  - url: http://localhost:3000
+    description: 本地开发服务器
+  - url: https://your-api-domain.com
+    description: 生产服务器
+
+paths:
+  /health:
+    post:
+      summary: 健康检查
+      description: 检查服务是否正常运行
+      operationId: healthCheck
+      responses:
+        '200':
+          description: 服务正常
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '500':
+          description: 服务异常
+
+  /calculate:
+    post:
+      summary: 计算 LaTeX 数学表达式
+      description: 计算 LaTeX 格式的数学表达式，支持分式、平方根、π等数学符号
+      operationId: calculateLatex
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateRequest'
+      responses:
+        '200':
+          description: 计算成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculateResponse'
+        '400':
+          description: 请求参数错误或计算失败
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculateResponse'
+
+components:
+  schemas:
+    CalculateRequest:
+      type: object
+      required:
+        - expression
+      properties:
+        expression:
+          type: string
+          description: LaTeX 格式的数学表达式
+          example: "\frac{50}{2} + \sqrt{16} \cdot 2"
+      example:
+        expression: "\frac{50}{2} + \sqrt{16} \cdot 2"
+
+    CalculateResponse:
+      type: object
+      properties:
+        result:
+          type: number
+          format: double
+          description: 计算结果
+          example: 33.0
+        expression:
+          type: string
+          description: 原始表达式
+          example: "\frac{50}{2} + \sqrt{16} \cdot 2"
+        success:
+          type: boolean
+          description: 是否计算成功
+          example: true
+        error:
+          type: string
+          description: 错误信息（仅当 success=false 时存在）
+          nullable: true
+          example: "计算错误: 表达式语法错误"
+      required:
+        - result
+        - expression
+        - success
+        - error
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          description: 服务状态
+          example: "ok"
+        version:
+          type: string
+          description: API 版本
+          example: "1.0.0"
+        service:
+          type: string
+          description: 服务名称
+          example: "mcp-math-api"
+      required:
+        - status
+        - version
+        - service
+
+tags:
+  - name: 数学计算
+    description: 数学表达式计算相关接口
+  - name: 系统状态
+    description: 系统健康状态检查接口
