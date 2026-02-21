@@ -3,16 +3,35 @@ name = "mcp-math-tool"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "mcp-math-tool"
+path = "src/main.rs"
+
 [dependencies]
+# 异步运行时
 tokio = { version = "1.0", features = ["full"] }
+
+# 序列化/反序列化
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+
+# 正则表达式处理
 regex = "1.10"
-meval = "0.2.0" # 一个快速且支持变量的数学表达式求值库
+
+# 数学表达式求值
+meval = "0.2.0"
+
+# 错误处理
 anyhow = "1.0"
 
 # HTTP 框架依赖 (用于 Dify 集成)
 axum = "0.7"
 tower-http = { version = "0.5", features = ["cors"] }
+
+# 日志记录
 tracing = "0.1"
 tracing-subscriber = "0.3"
+
+# 命令行参数解析
+clap = { version = "4.0", features = ["derive"] }
+

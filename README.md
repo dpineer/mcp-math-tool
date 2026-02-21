@@ -1,8 +1,10 @@
 # MCP 数学工具
 
-一个支持 LaTeX 格式数学表达式计算的工具，提供两种集成方式：
+一个支持 LaTeX 格式数学表达式计算的工具，提供三种集成方式：
 1. **MCP 协议**：与 Claude Desktop 等 AI 客户端集成
-2. **HTTP API**：与 Dify 等 Web 平台集成
+2. **HTTP API**：与 Dify 等 Web 平台集成  
+3. **混合模式**：同时运行HTTP服务和MCP接口
+
 
 ## 功能特性
 
@@ -78,6 +80,58 @@ cargo build --release
 ```
 
 服务器将在 `http://localhost:3000` 启动。
+
+## 使用方式三：混合模式（MCP + HTTP API）
+
+### 架构概述
+
+混合模式允许同时运行两种服务：
+- **Rust HTTP服务**：在端口3000提供REST API（如原有功能）
+- **Node.js MCP服务**：通过MCP协议提供数学计算工具
+
+### 启动步骤
+
+1. **启动Rust HTTP服务**（端口3000）：
+```bash
+cargo run --release
+```
+
+2. **启动Node.js MCP服务**（独立进程）：
+```bash
+cd /home/dpiner/文档/Cline/MCP/mcp-math-server
+npm run build
+node build/index.js
+```
+
+### VS Code集成配置
+
+MCP服务器已配置在VS Code中，提供以下工具：
+- `calculate_math`: 计算数学表达式，支持LaTeX格式
+- `latex_to_expr`: 将LaTeX转换为可计算表达式
+
+### 使用示例
+
+**通过MCP接口计算：**
+```
+计算: \frac{1}{2} + \sqrt{4}
+结果: 2.5
+```
+
+**通过HTTP API计算：**
+```bash
+curl -X POST http://localhost:3000/calculate \
+  -H "Content-Type: application/json" \
+  -d '{"expression": "\\frac{1}{2} + \\sqrt{4}"}'
+```
+
+### 混合模式优势
+
+- **灵活性**：支持多种集成方式
+- **兼容性**：同时满足AI客户端和Web平台需求
+- **可扩展性**：可独立升级任一服务
+- **容错性**：一个服务故障不影响另一个
++++++++
+```
 
 ### API 接口
 
