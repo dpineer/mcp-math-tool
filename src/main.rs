@@ -129,7 +129,7 @@ async fn run_http_server(addr: String) -> Result<()> {
 /// 启动MCP服务器
 async fn run_mcp_server() -> Result<()> {
     info!("启动 MCP 数学工具 MCP 服务器...");
-    mcp_server::run_mcp_server().await?;
+    mcp_server::run_mcp_server().await.map_err(|e| anyhow::anyhow!("{}", e))?;
     Ok(())
 }
 
